@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Signal — Job Scan</title>
+<meta name="robots" content="noindex, nofollow"/>
+<style>
+  :root{
+    --bg:#0B1016; --panel:#121924; --panel-2:#161F2C; --line:#232E3D;
+    --text:#E7EDF3; --muted:#7C8A9C; --signal:#4FD1C5; --signal-dim:#2B4A47;
+    --amber:#EFA75C; --amber-dim:#3A2E1D;
+    --mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,monospace;
+    --display:'Space Grotesk','IBM Plex Sans',sans-serif;
+    --body:'IBM Plex Sans',sans-serif;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);margin:0;font-size:14px;}
+  .shell{max-width:1000px;margin:0 auto;padding:28px 20px 60px;}
+  .header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:16px;flex-wrap:wrap;gap:10px;}
+  .title{font-family:var(--display);font-weight:700;font-size:21px;display:flex;align-items:center;gap:10px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--signal);animation:pulse 2.2s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,209,197,.5);}70%{box-shadow:0 0 0 8px rgba(79,209,197,0);}100%{box-shadow:0 0 0 0 rgba(79,209,197,0);}}
+  .sub{color:var(--muted);font-size:12px;margin-top:4px;font-family:var(--mono);}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+  .job{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+  .job-title{font-weight:600;font-size:14px;}
+  .job-meta{color:var(--muted);font-family:var(--mono);font-size:11.5px;margin-top:4px;}
+  .badge{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:4px;background:var(--amber-dim);color:var(--amber);margin-right:6px;margin-top:6px;}
+  .actions{display:flex;gap:8px;}
+  button, a.btn{font-family:var(--mono);font-size:12px;background:var(--signal);color:#081513;border:none;border-radius:7px;padding:9px 14px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block;}
+  button.ghost, a.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
+  .empty{color:var(--muted);text-align:center;padding:40px 10px;font-family:var(--mono);font-size:13px;}
+  .modal-bg{position:fixed;inset:0;background:rgba(4,7,10,.75);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:100;}
+  .modal-bg.open{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:720px;width:100%;padding:22px;}
+  .modal h2{font-family:var(--display);margin:0 0 4px;font-size:17px;}
+  .gapbox{background:var(--amber-dim);border:1px solid #4A3620;border-radius:7px;padding:12px 14px;margin:14px 0;}
+  .gapbox-title{font-family:var(--mono);font-size:11px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;}
+  .resumebox{background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:14px 16px;font-family:var(--mono);font-size:12px;line-height:1.6;white-space:pre-wrap;max-height:400px;overflow-y:auto;margin:10px 0 14px;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--signal-dim);color:var(--signal);font-family:var(--mono);font-size:12px;padding:9px 16px;border-radius:8px;z-index:200;display:none;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div>
+      <div class="title"><span class="dot"></span>SIGNAL — Job Scan</div>
+      <div class="sub" id="lastrun">loading results…</div>
+    </div>
+  </div>
+  <div class="panel" id="results"></div>
+</div>
+
+<div class="modal-bg" id="modalbg">
+  <div class="modal" id="modal"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let JOBS = [];
+let APPLIED = JSON.parse(localStorage.getItem('applied') || '{}');
+
+function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display='block';
+  setTimeout(()=>{ t.style.display='none'; }, 2500);
+}
+
+function render(){
+  const el = document.getElementById('results');
+  if(JOBS.length === 0){
+    el.innerHTML = `<div class="empty">No matches yet. The scan runs automatically every few hours — check back, or trigger it manually from the repo's Actions tab.</div>`;
+    return;
+  }
+  el.innerHTML = JOBS.map(j => `
+    <div class="job">
+      <div>
+        <div class="job-title">${esc(j.title)}</div>
+        <div class="job-meta">${esc(j.company)} ${j.location ? '· '+esc(j.location) : ''} · found ${new Date(j.found_at).toLocaleDateString()}</div>
+        ${APPLIED[j.id] ? '<span class="badge" style="background:var(--signal-dim);color:var(--signal);">applied</span>' : ''}
+        ${j.gap_flags && j.gap_flags.length ? `<span class="badge">${j.gap_flags.length} gap flag(s)</span>` : ''}
+        ${!j.tailored_resume ? `<span class="badge">not tailored yet</span>` : ''}
+      </div>
+      <div class="actions">
+        <a class="btn ghost" href="${j.link}" target="_blank" rel="noopener">View posting</a>
+        ${j.tailored_resume ? `<button onclick="openJob('${j.id}')">Review & Apply</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openJob(id){
+  const j = JOBS.find(x => x.id === id);
+  if(!j) return;
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <h2>${esc(j.title)}</h2>
+    <div class="sub" style="margin-bottom:10px;">${esc(j.company)}</div>
+    ${j.gap_flags && j.gap_flags.length ? `
+      <div class="gapbox">
+        <div class="gapbox-title">Honest gap flags — review before applying</div>
+        <ul>${j.gap_flags.map(g=>`<li>${esc(g)}</li>`).join('')}</ul>
+      </div>` : ''}
+    ${j.key_changes && j.key_changes.length ? `
+      <div class="gapbox-title" style="color:var(--signal);margin-top:10px;">What was changed</div>
+      <ul>${j.key_changes.map(c=>`<li style="font-size:12.5px;">${esc(c)}</li>`).join('')}</ul>` : ''}
+    <div class="gapbox-title" style="color:var(--signal);">Tailored resume</div>
+    <div class="resumebox">${esc(j.tailored_resume)}</div>
+    <div class="actions">
+      <button onclick="copyAndOpen('${j.id}')">Copy resume & open job posting</button>
+      <button class="ghost" onclick="closeModal()">Close</button>
+    </div>
+  `;
+  document.getElementById('modalbg').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('modalbg').classList.remove('open'); }
+
+async function copyAndOpen(id){
+  const j = JOBS.find(x => x.id === id);
+  if(!j) return;
+  try{ await navigator.clipboard.writeText(j.tailored_resume); }catch(e){}
+  APPLIED[id] = true;
+  localStorage.setItem('applied', JSON.stringify(APPLIED));
+  window.open(j.link, '_blank');
+  toast('Resume copied — opening job posting');
+  closeModal();
+  render();
+}
+
+fetch('data/jobs.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    JOBS = data;
+    document.getElementById('lastrun').textContent =
+      JOBS.length ? `${JOBS.length} tracked posting(s) · newest first` : 'scan runs automatically — no matches yet';
+    render();
+  })
+  .catch(() => {
+    document.getElementById('lastrun').textContent = 'could not load results';
+  });
+</script>
+</body>
+</html>
