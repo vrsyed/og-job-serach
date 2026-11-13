@@ -1,5 +1,115 @@
 [
   {
+    "id": "lv_10b78a07-7651-424f-afe3-bc48e3d139ea",
+    "title": "Staff Backend Engineer | JVM",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/10b78a07-7651-424f-afe3-bc48e3d139ea",
+    "found_at": "2026-11-13T19:01:57.696813+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_0f566c40-2d47-4be6-868d-079c1b0820b3",
+    "title": "Site Reliability Engineer II",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Canada",
+    "link": "https://jobs.lever.co/jobgether/0f566c40-2d47-4be6-868d-079c1b0820b3",
+    "found_at": "2026-11-13T19:01:57.694704+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_460b8d83-b7b6-417c-8587-00bb2db6274d",
+    "title": "Senior Software Development Engineer in Test (SDET)",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Canada",
+    "link": "https://jobs.lever.co/jobgether/460b8d83-b7b6-417c-8587-00bb2db6274d",
+    "found_at": "2026-11-13T19:01:57.693131+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_e575ec07-ee4b-4221-957a-ebdd3a4ab629",
+    "title": "Senior CRM Data Analyst",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/e575ec07-ee4b-4221-957a-ebdd3a4ab629",
+    "found_at": "2026-11-13T19:01:57.689455+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_f2f407bd-6ae6-4885-8969-55028a48a88e",
+    "title": "Sales Coordinator - Advertising Company",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/f2f407bd-6ae6-4885-8969-55028a48a88e",
+    "found_at": "2026-11-13T19:01:57.687640+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_bb41669e-6b3c-43b6-aa96-fe8e8b7e9904",
+    "title": "RevOps Data Infrastructure Engineer",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/bb41669e-6b3c-43b6-aa96-fe8e8b7e9904",
+    "found_at": "2026-11-13T19:01:57.687516+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_39d08997-ac83-44a7-a9ea-8d21b159b424",
+    "title": "Professional Services Engineer",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/39d08997-ac83-44a7-a9ea-8d21b159b424",
+    "found_at": "2026-11-13T19:01:57.686166+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_8773397b-6a6a-46ef-a3c0-f587081dacac",
+    "title": "Brand Manager",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/8773397b-6a6a-46ef-a3c0-f587081dacac",
+    "found_at": "2026-11-13T19:01:57.672070+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_9a97780e-0709-42b0-a2f3-e645ef414439",
+    "title": "Associate Manager, Data",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Brazil",
+    "link": "https://jobs.lever.co/jobgether/9a97780e-0709-42b0-a2f3-e645ef414439",
+    "found_at": "2026-11-13T19:01:57.671558+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
+    "id": "lv_9658c5e5-6e84-4d5b-a45b-0345d9cac45e",
+    "title": "Analyste II, S\u00e9curit\u00e9 de l'information",
+    "company": "Jobgether (India remote roles, many partner companies)",
+    "location": "Canada",
+    "link": "https://jobs.lever.co/jobgether/9658c5e5-6e84-4d5b-a45b-0345d9cac45e",
+    "found_at": "2026-11-13T19:01:57.671012+00:00",
+    "tailored_resume": null,
+    "key_changes": [],
+    "gap_flags": []
+  },
+  {
     "id": "lv_f30c202f-2872-4599-92d8-b47ac4efd422",
     "title": "Quality Control Specialist for AI/ML with Slovak Language",
     "company": "TSMG",
